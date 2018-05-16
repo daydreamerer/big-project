@@ -1,9 +1,8 @@
 #include "HelloWorldScene.h"
 #include "SettingScene.h"
 USING_NS_CC;
-using namespace CocosDenshion;
 
-////////////////////C部分代码  结束///////////////////
+
 Scene* HelloWorld::createScene()
 {
 	auto scene = Scene::create();
