@@ -7,7 +7,10 @@ USING_NS_CC;
 
 #define TIME_LAG 500		//发送和接收信息的时间间隔
 
+extern Information information;
+
 Client* Client::client = new Client();
+int Client::count = 0;
 
 bool Client::init()
 {
@@ -49,7 +52,7 @@ BOOL Client::ConnectServer()
 
 BOOL Client::recv_Cli()
 {
-	char * recvBuf = const_cast<char *>(information.getRecvBuf().c_str());
+	char recvBuf[BUFLEN+1];
 	ZeroMemory(recvBuf, sizeof(recvBuf));
 	if (SOCKET_ERROR == recv(sHost, recvBuf, sizeof(recvBuf), 0))
 	{
@@ -57,7 +60,7 @@ BOOL Client::recv_Cli()
 		WSACleanup();
 		return FALSE;
 	}
-
+	recvBuf[BUFLEN] = '\0';
 	information.setRecvBuf(recvBuf);
 
 	return TRUE;
@@ -65,8 +68,7 @@ BOOL Client::recv_Cli()
 
 BOOL Client::send_Cli()
 {
-	char* sendBuf = const_cast<char *>(information.getSendBuf().c_str());
-	if (SOCKET_ERROR == send(sHost, sendBuf, sizeof(sendBuf), 0))
+	if (SOCKET_ERROR == send(sHost, const_cast<char *>(information.getSendBuf().c_str()), information.getSendBuf().length(), 0))
 	{
 		closesocket(sHost);
 		WSACleanup();
@@ -92,6 +94,12 @@ Client::Client()
 
 Client* Client::getInstance()
 {
+	if (count == 1)
+	{
+		thread SendThread(client->SendThread);
+		thread RecvThread(client->RecvThread);
+	}
+	++count;
 	return client;
 }
 
@@ -111,10 +119,4 @@ void Client::RecvThread()
 		recv_Cli();
 		Sleep(TIME_LAG);
 	}
-}
-
-void StartClient(Client& client)
-{
-	thread SendThread(client.SendThread);
-	thread RecvThread(client.RecvThread);
 }

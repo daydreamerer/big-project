@@ -1,5 +1,6 @@
 #include "HelloWorldScene.h"
 #include "SettingScene.h"
+#include "AccontScene.h"
 USING_NS_CC;
 
 
@@ -91,6 +92,9 @@ bool HelloWorld::init()
 //ÒôÐ§´ý´¦Àí
 void HelloWorld::menuStartCallback(Ref* pSender)
 {
+	auto scene = AccontScene::createScene();
+	auto reScene = TransitionJumpZoom::create(1.0f, scene);
+	Director::getInstance()->pushScene(reScene);
 	if (UserDefault::getInstance()->getBoolForKey(SOUND_KEY))
 	{
 		SimpleAudioEngine::getInstance()->playEffect("filename");

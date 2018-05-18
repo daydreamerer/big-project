@@ -1,4 +1,5 @@
 #include "enJsonParser.h"
+#
 USING_NS_CC;
 enJsonParser * enJsonParser::createWithArray(ValueVector pListData)
 {
@@ -19,7 +20,7 @@ bool enJsonParser::initWithArray(ValueVector pListData)
 	return true;
 }
 
-void enJsonParser::encode(Information information)
+void enJsonParser::encode(Information message)		//这里换成message防止直接使用全局变量information造成未知的bug
 {
 	rapidjson::Document document;
 	document.SetObject();		//初始化document
@@ -60,7 +61,6 @@ void enJsonParser::encode(Information information)
 
 	document.Accept(writer);	//通过write将数据写入buffer
 	
-	information.getSendBuf() = buffer.GetString();
-
+	message.setSendBuf(buffer.GetString());
 	//log("out: %s", out);
 }

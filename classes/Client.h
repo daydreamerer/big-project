@@ -9,10 +9,10 @@
 #include"Information.h"
 //#include <ctime>
 //客户端  单例模式
-//结构很烂
+
 #pragma comment(lib,"WS2_32.lib")  
 using namespace std;
-#define BUFLEN 1024  
+
 #define PORT 9999
 
 class Client
@@ -22,14 +22,17 @@ private:
 	SOCKET sHost;
 	SOCKADDR_IN addrServer;
 	static Client * client;
-	Information information;
-public:
 	explicit Client();
+	bool init();
+public:
 	~Client()
 	{
 		closesocket(sHost);
+		WSACleanup();
+		delete client;
 	}
-	bool init();
+
+	static int count;
 	static Client* getInstance();
 
 	BOOL ConnectServer();
@@ -39,6 +42,5 @@ public:
 	void SendThread();		//建立子进程
 	void RecvThread();
 
-	friend void StartClient(Client& client);
 };
 #endif
