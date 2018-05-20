@@ -23,7 +23,8 @@ private:
 public:
 	void attack(Sprite*);
 	void sethp(int damage);
-	void move(Vec2 v);
+	void move();
+	void setDestination(Vec2 Destination);
 	static Military* create(string & filename);
 	static Military* create(const std::string & filename, const Rect & rect);
 	static Military* createWithTexture(Texture2D * texture);
